@@ -1,0 +1,258 @@
+[
+ {
+  "area": "Bandgap",
+  "kind": "compared",
+  "name": "Composition->band gap mean error: Pb-based (266 measured)",
+  "value": "56 meV (bias -35)",
+  "ok": true,
+  "ref": "measurement methods (absorption edge, Tauc, EQE) differ by ±30-50 meV among themselves · allowed 80 meV"
+ },
+ {
+  "area": "Bandgap",
+  "kind": "compared",
+  "name": "Composition->band gap mean error: pure iodide Pb (121 measured)",
+  "value": "49 meV (bias -38)",
+  "ok": true,
+  "ref": "measurement methods (absorption edge, Tauc, EQE) differ by ±30-50 meV among themselves · allowed 80 meV"
+ },
+ {
+  "area": "Bandgap",
+  "kind": "compared",
+  "name": "Composition->band gap mean error: mixed I/Br Pb (145 measured)",
+  "value": "62 meV (bias -31)",
+  "ok": true,
+  "ref": "measurement methods (absorption edge, Tauc, EQE) differ by ±30-50 meV among themselves · allowed 80 meV"
+ },
+ {
+  "area": "Bandgap",
+  "kind": "compared",
+  "name": "Composition->band gap mean error: Pb-Sn (25 measured)",
+  "value": "54 meV (bias -30)",
+  "ok": true,
+  "ref": "measurement methods (absorption edge, Tauc, EQE) differ by ±30-50 meV among themselves · allowed 80 meV"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "No quench / antisolvent (one-step spin)",
+  "value": "model ×0.83 · measured ×0.92",
+  "ok": true,
+  "ref": "measured = ratio between top-10% cells (between medians ×0.83), 6,491 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "Gas quench / antisolvent",
+  "value": "model ×1.02 · measured ×0.93",
+  "ok": false,
+  "ref": "measured = ratio between top-10% cells (between medians ×0.82), 453 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "Vacuum quench / antisolvent",
+  "value": "model ×1.01 · measured ×1.01",
+  "ok": true,
+  "ref": "measured = ratio between top-10% cells (between medians ×1.03), 237 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "n-i-p: SnO2 / TiO2 electron layer",
+  "value": "model ×1.02 · measured ×1.03",
+  "ok": true,
+  "ref": "measured = ratio between top-10% cells (between medians ×1.10), 4,435 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "p-i-n: PEDOT / PTAA hole layer",
+  "value": "model ×0.93 · measured ×0.83",
+  "ok": true,
+  "ref": "measured = ratio between top-10% cells (between medians ×0.70), 933 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "p-i-n: NiOx / PTAA hole layer",
+  "value": "model ×1.00 · measured ×0.96",
+  "ok": true,
+  "ref": "measured = ratio between top-10% cells (between medians ×0.91), 1,105 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "n-i-p: P3HT / Spiro hole layer",
+  "value": "model ×0.97 · measured ×0.82",
+  "ok": true,
+  "ref": "measured = ratio between top-10% cells (between medians ×0.72), 866 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "p-i-n: PCBM / C60 electron layer",
+  "value": "model ×1.00 · measured ×0.94",
+  "ok": true,
+  "ref": "measured = ratio between top-10% cells (between medians ×0.93), 2,714 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "Composition: triple-cation CsFAMA / MAPbI3",
+  "value": "model ×0.98 · measured ×1.12",
+  "ok": false,
+  "ref": "measured = ratio between top-10% cells (between medians ×1.23), 4,644 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "Composition: FA-Cs / MAPbI3",
+  "value": "model ×0.98 · measured ×1.07",
+  "ok": false,
+  "ref": "measured = ratio between top-10% cells (between medians ×1.17), 830 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "Composition: inorganic CsPb(I,Br)3 / MAPbI3",
+  "value": "model ×0.79 · measured ×0.75",
+  "ok": true,
+  "ref": "measured = ratio between top-10% cells (between medians ×0.60), 2,466 cells compared · allowed: same direction and within 25%"
+ },
+ {
+  "area": "Fab",
+  "kind": "compared",
+  "name": "1.6 eV cells best Voc (top 1%)",
+  "value": "measured 1.18 V · model 1.15 V",
+  "ok": true,
+  "ref": "12,151 cells from papers since 2018 · allowed ±0.06 V"
+ },
+ {
+  "area": "Fab",
+  "kind": "calibrated",
+  "name": "1.8 eV cells best Voc (top 1%)",
+  "value": "measured 1.35 V · model 1.32 V",
+  "ok": true,
+  "ref": "195 cells from papers since 2018 · allowed ±0.06 V"
+ },
+ {
+  "area": "Fab",
+  "kind": "calibrated",
+  "name": "1.9 eV cells best Voc (top 1%)",
+  "value": "measured 1.40 V · model 1.39 V",
+  "ok": true,
+  "ref": "402 cells from papers since 2018 · allowed ±0.06 V"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 median error over 11 condition groups",
+  "value": "×1.28 (before calibration ×10)",
+  "ok": true,
+  "ref": "groups: air/N2, light/dark, temperature, encapsulation. 1,553 measured T80 values"
+ },
+ {
+  "area": "Env",
+  "kind": "predicted",
+  "name": "Cross-validation: held-out half of the cells",
+  "value": "×1.58 (before calibration ×9)",
+  "ok": true,
+  "ref": "constants fitted on one half and evaluated on the other · allowed within 2x"
+ },
+ {
+  "area": "Env",
+  "kind": "limit",
+  "name": "Predicting T80 of individual cells",
+  "value": "within 10x 80% · within 3x 49% · rank correlation 0.34",
+  "ok": false,
+  "ref": "cell quality varies between labs even under the same conditions, so individual prediction is hard (a Frontiers 2023 machine-learning study reached a similar conclusion)"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 air · dark · room temp · no encapsulation",
+  "value": "measured 192 h · model 192 h (before 133)",
+  "ok": true,
+  "ref": "median of 815 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 air · light · ≥50 °C · no encapsulation",
+  "value": "measured 40 h · model 14 h (before 1)",
+  "ok": true,
+  "ref": "median of 39 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 air · light · room temp · encapsulated",
+  "value": "measured 100 h · model 36 h (before 2)",
+  "ok": true,
+  "ref": "median of 49 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 air · light · room temp · no encapsulation",
+  "value": "measured 38 h · model 40 h (before 2)",
+  "ok": true,
+  "ref": "median of 169 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 nitrogen · light · room temp · no encapsulation",
+  "value": "measured 100 h · model 100 h (before 6102)",
+  "ok": true,
+  "ref": "median of 106 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 air · dark · ≥50 °C · no encapsulation",
+  "value": "measured 53 h · model 29 h (before 11)",
+  "ok": true,
+  "ref": "median of 87 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 nitrogen · dark · room temp · no encapsulation",
+  "value": "measured 375 h · model 306 h (before 100000)",
+  "ok": true,
+  "ref": "median of 113 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 air · dark · room temp · encapsulated",
+  "value": "measured 150 h · model 180 h (before 114)",
+  "ok": true,
+  "ref": "median of 44 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 nitrogen · dark · ≥50 °C · no encapsulation",
+  "value": "measured 74 h · model 73 h (before 70)",
+  "ok": true,
+  "ref": "median of 44 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 air · light · ≥50 °C · encapsulated",
+  "value": "measured 20 h · model 18 h (before 1)",
+  "ok": true,
+  "ref": "median of 18 cells · allowed within 3x"
+ },
+ {
+  "area": "Env",
+  "kind": "calibrated",
+  "name": "T80 nitrogen · light · ≥50 °C · no encapsulation",
+  "value": "measured 40 h · model 68 h (before 317)",
+  "ok": true,
+  "ref": "median of 21 cells · allowed within 3x"
+ }
+]

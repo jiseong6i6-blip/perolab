@@ -1,0 +1,90 @@
+[
+ {
+  "name": "No quench / antisolvent (one-step spin)",
+  "real": 0.8342591444614993,
+  "n": 6491,
+  "model": 0.8343576087060021,
+  "agree": true,
+  "close": true
+ },
+ {
+  "name": "Gas quench / antisolvent",
+  "real": 0.8212095963922541,
+  "n": 453,
+  "model": 1.0195449269006378,
+  "agree": false,
+  "close": true
+ },
+ {
+  "name": "Vacuum quench / antisolvent",
+  "real": 1.0277477212608914,
+  "n": 237,
+  "model": 1.0131614617639164,
+  "agree": true,
+  "close": true
+ },
+ {
+  "name": "n-i-p: SnO2 / TiO2 electron layer",
+  "real": 1.1039176554908376,
+  "n": 4435,
+  "model": 1.0229271272453364,
+  "agree": true,
+  "close": true
+ },
+ {
+  "name": "p-i-n: PEDOT / PTAA hole layer",
+  "real": 0.7021894836479404,
+  "n": 933,
+  "model": 0.9328905136601274,
+  "agree": true,
+  "close": false
+ },
+ {
+  "name": "p-i-n: NiOx / PTAA hole layer",
+  "real": 0.9118907031345611,
+  "n": 1105,
+  "model": 0.9977986407232018,
+  "agree": true,
+  "close": true
+ },
+ {
+  "name": "n-i-p: P3HT / Spiro hole layer",
+  "real": 0.7242850029552944,
+  "n": 866,
+  "model": 0.9733216998993198,
+  "agree": true,
+  "close": false
+ },
+ {
+  "name": "p-i-n: PCBM / C60 electron layer",
+  "real": 0.9274068778700488,
+  "n": 2714,
+  "model": 0.9964428450018312,
+  "agree": true,
+  "close": true
+ },
+ {
+  "name": "Composition: triple-cation CsFAMA / MAPbI3",
+  "real": 1.228124628370319,
+  "n": 4644,
+  "model": 0.9840996985538094,
+  "agree": false,
+  "close": true
+ },
+ {
+  "name": "Composition: FA-Cs / MAPbI3",
+  "real": 1.166334788460994,
+  "n": 830,
+  "model": 0.9828589872582969,
+  "agree": false,
+  "close": true
+ },
+ {
+  "name": "Composition: inorganic CsPb(I,Br)3 / MAPbI3",
+  "real": 0.5956624949426625,
+  "n": 2466,
+  "model": 0.7870910720634351,
+  "agree": true,
+  "close": false
+ }
+]

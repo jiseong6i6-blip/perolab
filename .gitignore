@@ -1,0 +1,22 @@
+# raw Perovskite Database downloads (160 MB+, fetch with data/fetch_perovskite_db.py)
+data/raw/
+data/pdb_clean.csv
+data/*.jsonl
+data/*.state.json
+perovskite_db.*
+
+# built page in web/ (the published copy lives in docs/)
+web/index.html
+web/perovskite_lab.html
+
+# Python / Node
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

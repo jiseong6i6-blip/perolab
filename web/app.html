@@ -1,0 +1,535 @@
+<title>Perovskite Virtual Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* layout: top header + bench tabs. Each bench is two columns [sample/charts | controls], one column on narrow screens */
+:root {
+  --bg: #eef1f5; --panel: #ffffff; --panel-2: #f6f8fb; --ink: #141c28; --muted: #5a6577; --line: #d6dce5;
+  --accent: #2443c4; --accent-ink: #ffffff; --accent-soft: #e3e8fb;
+  --top: #cf5536; --mid: #23876a; --bot: #5b48c2;
+  --good: #1f8a5b; --warn: #b7791f; --bad: #c2412d; --lamp: #f2c14e;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e131a; --panel: #161d27; --panel-2: #1b2430; --ink: #e5eaf2; --muted: #95a1b3; --line: #2a3443;
+  --accent: #8197ff; --accent-ink: #0e131a; --accent-soft: #232d4d;
+  --top: #ef7a5c; --mid: #4cc39b; --bot: #9c8cff;
+  --good: #49c28a; --warn: #e0a84a; --bad: #f07a62; --lamp: #f2c14e; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e131a; --panel: #161d27; --panel-2: #1b2430; --ink: #e5eaf2; --muted: #95a1b3; --line: #2a3443;
+  --accent: #8197ff; --accent-ink: #0e131a; --accent-soft: #232d4d;
+  --top: #ef7a5c; --mid: #4cc39b; --bot: #9c8cff;
+  --good: #49c28a; --warn: #e0a84a; --bad: #f07a62; --lamp: #f2c14e; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.55; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 18px 40px; }
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+h1 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h1 small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+h2 { font-size: 15px; font-weight: 600; margin: 0; }
+h3 { font-size: 13px; font-weight: 600; margin: 0; }
+.mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+nav.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+nav.tabs button { font: inherit; font-weight: 500; background: transparent; color: var(--muted); border: 1px solid transparent; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+nav.tabs button:hover { color: var(--ink); background: var(--panel-2); }
+nav.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+section.bench { padding-top: 18px; }
+.grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 900px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.between { justify-content: space-between; }
+.hint { color: var(--muted); font-size: 12px; }
+.lead { color: var(--muted); max-width: 70ch; margin: 6px 0 0; }
+
+/* KPI strip */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.kpi { background: var(--panel); padding: 10px 12px; min-width: 0; }
+.kpi .k { font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
+.kpi .v { font-family: var(--font-mono); font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; margin-top: 2px; white-space: nowrap; }
+.kpi .v small { font-size: 12px; color: var(--muted); margin-left: 2px; }
+.kpi .s { font-size: 11px; color: var(--muted); }
+.kpi.bad .v { color: var(--bad); } .kpi.good .v { color: var(--good); } .kpi.warn .v { color: var(--warn); }
+
+/* buttons, chips */
+.btn { font: inherit; font-weight: 500; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 8px; padding: 7px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.lamp[aria-pressed="true"] { background: var(--lamp); color: #2a2000; border-color: var(--lamp); }
+.chip { font: inherit; font-size: 12px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; border-radius: 999px; padding: 3px 10px; background: var(--panel-2); border: 1px solid var(--line); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.pill.on .dot { background: var(--lamp); box-shadow: 0 0 0 3px color-mix(in srgb, var(--lamp) 35%, transparent); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; border: 0; background: var(--panel); color: var(--muted); padding: 6px 12px; cursor: pointer; border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+/* sliders */
+.ctl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: baseline; }
+.ctl label { font-weight: 500; font-size: 13px; }
+.ctl output { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+.ctl input[type=range] { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); margin: 4px 0 0; }
+.ctl .hint { grid-column: 1 / -1; }
+.ctls { display: grid; gap: 14px; }
+.ctls.two { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+legend { font-size: 11px; letter-spacing: 0.06em; color: var(--muted); padding: 0; margin-bottom: 10px; text-transform: uppercase; font-weight: 600; }
+hr.div { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
+
+/* sample map */
+.sample { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.mapbox { position: relative; width: 100%; max-width: 520px; aspect-ratio: 1; margin: 0 auto; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); background: #1a120e; }
+.mapbox canvas { width: 100%; height: 100%; display: block; image-rendering: auto; }
+.scale { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 11px; color: var(--muted); max-width: 520px; margin: 0 auto; width: 100%; }
+.scale .bar { height: 10px; border-radius: 3px; background: linear-gradient(90deg, #21150f, #5a2a12, #a5470f, #e9821a, #ffc857); }
+.mapmeta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; max-width: 520px; margin: 0 auto; width: 100%; font-size: 12px; color: var(--muted); }
+
+/* charts */
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { fill: var(--muted); font-family: var(--font-mono); font-size: 10px; }
+.chart .axis { stroke: var(--line); }
+.chart .grid { stroke: var(--line); stroke-dasharray: 2 3; opacity: 0.8; }
+.chart .ttl { fill: var(--ink); font-family: var(--font-body); font-size: 11px; font-weight: 500; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 3px; border-radius: 2px; background: var(--c); margin-right: 6px; vertical-align: middle; }
+
+/* cell design */
+.layers { display: grid; gap: 10px; }
+.layer { border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: var(--panel-2); border-left: 4px solid var(--c); display: grid; gap: 10px; }
+.layer .head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+.layer .comp { font-size: 12px; color: var(--muted); }
+.jbars { display: grid; gap: 6px; }
+.jbar { display: grid; grid-template-columns: 74px minmax(0, 1fr) 68px; gap: 8px; align-items: center; font-size: 12px; }
+.jbar .track { height: 12px; background: var(--panel-2); border-radius: 3px; overflow: hidden; border: 1px solid var(--line); }
+.jbar .fill { height: 100%; background: var(--c); }
+.jbar.lim .name::after { content: " ◂ limiting"; color: var(--bad); font-size: 11px; }
+.big { font-family: var(--font-mono); font-size: 40px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+.big small { font-size: 16px; color: var(--muted); }
+
+/* tables */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.03em; }
+td.num, th.num { text-align: right; }
+.ok { color: var(--good); font-weight: 600; }
+.badge { font-size: 11px; padding: 1px 8px; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.note { font-size: 12px; color: var(--muted); border-left: 3px solid var(--line); padding: 2px 0 2px 10px; max-width: 75ch; }
+/* Cell lab */
+.fab-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width: 900px) { .fab-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.step { display: grid; gap: 12px; }
+.step-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.step-reset { margin-left: auto; font: inherit; font-size: 12px; color: var(--accent); background: none; border: 0; padding: 2px 4px; cursor: pointer; }
+.step-reset:disabled { color: var(--muted); opacity: .5; cursor: default; }
+.ctl.changed > label::after, .sel.changed > label::after { content: " ●"; color: var(--accent); font-size: 10px; }
+.chip.mine { border-style: dashed; }
+.chip .x { margin-left: 6px; opacity: .6; }
+.chip .x:hover { opacity: 1; }
+.delta { font-size: 13px; font-family: var(--font-mono); margin-top: 4px; }
+.delta.up { color: var(--good); } .delta.down { color: var(--bad); }
+.step-n { font-family: var(--font-mono); font-size: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--bg); display: inline-grid; place-items: center; flex: none; }
+select { font: inherit; width: 100%; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+.sel { display: grid; gap: 4px; min-width: 0; }
+.sel label { font-weight: 500; font-size: 13px; }
+.check { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+.gauge { display: grid; gap: 6px; }
+.gauge .track { position: relative; height: 12px; border-radius: 6px; background: linear-gradient(90deg, color-mix(in srgb, var(--bad) 35%, transparent) 0 20%, color-mix(in srgb, var(--good) 35%, transparent) 20% 75%, color-mix(in srgb, var(--bad) 35%, transparent) 75% 100%); border: 1px solid var(--line); }
+.gauge .mark { position: absolute; top: -4px; width: 3px; height: 18px; background: var(--ink); border-radius: 2px; transform: translateX(-1px); }
+.gauge .lbl { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
+.wf { display: grid; gap: 6px; margin-top: 12px; }
+.wf-row { display: grid; grid-template-columns: 120px minmax(0, 1fr) 70px; gap: 8px; align-items: center; font-size: 12px; }
+.wf-row .track { height: 14px; position: relative; }
+.wf-row .seg-bar { position: absolute; top: 0; height: 100%; border-radius: 3px; background: var(--c); }
+.msgs { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
+.msgs li { font-size: 13px; padding: 8px 10px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--line); border-left: 4px solid var(--c, var(--muted)); max-width: 75ch; }
+.msgs li.w { --c: var(--warn); }
+.msgs li.n { --c: var(--accent); }
+.msgs li.ok { --c: var(--good); }
+.sharebar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); margin-top: 12px; }
+.sharebar span { height: 100%; }
+[hidden] { display: none !important; }
+.real { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+.real .bar { position: relative; height: 18px; border-radius: 4px; background: var(--panel-2); border: 1px solid var(--line); }
+.real .iqr { position: absolute; top: 3px; bottom: 3px; background: color-mix(in srgb, var(--accent) 22%, transparent); border-radius: 3px; }
+.real .med { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+.real .me { position: absolute; top: -4px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--top); transform: translateX(-6px); }
+.real .ticks { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
+.msgs li.x { --c: var(--mid); }
+.vb { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel-2); white-space: nowrap; }
+.vb::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
+.vb.ext::before { background: var(--mid); }
+.vb.ext { border-color: color-mix(in srgb, var(--mid) 60%, var(--line)); }
+.prog { height: 8px; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--line); overflow: hidden; }
+.prog > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+.btn:disabled { opacity: .5; cursor: progress; }
+.ctl input[type=range]:disabled { opacity: .45; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Perovskite Virtual Lab<small>Change the composition, shine light and stack cells · beyond the range of papers the calculation continues with physical laws (<span class="vb">within validated range</span> <span class="vb ext">extrapolated · physics</span>)</small></h1>
+    <nav class="tabs" role="tablist" aria-label="Benches">
+      <button role="tab" id="tab-fab" aria-controls="bench-fab" aria-selected="true">Cell lab</button>
+      <button role="tab" id="tab-env" aria-controls="bench-env" aria-selected="false">Environment lab</button>
+      <button role="tab" id="tab-seg" aria-controls="bench-seg" aria-selected="false">Segregation bench</button>
+      <button role="tab" id="tab-ion" aria-controls="bench-ion" aria-selected="false">Ions · hysteresis</button>
+      <button role="tab" id="tab-cell" aria-controls="bench-cell" aria-selected="false">Tandem designer</button>
+      <button role="tab" id="tab-comp" aria-controls="bench-comp" aria-selected="false">Composition calculator</button>
+      <button role="tab" id="tab-log" aria-controls="bench-log" aria-selected="false">Validation</button>
+    </nav>
+  </header>
+
+  <!-- ================= Cell lab ================= -->
+  <section class="bench" id="bench-fab" role="tabpanel" aria-labelledby="tab-fab">
+    <div class="row between" style="margin-bottom:12px">
+      <div class="row" id="fab-presets"></div>
+      <span class="hint" id="fab-current"></span>
+    </div>
+    <div class="row fab-tools" style="margin-bottom:14px">
+      <button class="btn" id="fab-undo" disabled title="Ctrl+Z">↶ Undo</button>
+      <button class="btn" id="fab-reset-preset" disabled>↺ Back to preset</button>
+      <button class="btn" id="fab-reset-all">Default recipe</button>
+      <button class="btn" id="fab-save">★ Save as my recipe</button>
+      <span class="hint" id="fab-tool-note"></span>
+    </div>
+    <div class="grid fab-grid">
+      <div class="stack">
+        <div class="panel step"><div class="step-h"><span class="step-n">1</span><h2>Composition (ABX₃)</h2><span class="hint">What goes on the A, B and X sites, and how much</span></div><div class="ctls two" id="fab-comp"></div><div class="gauge" id="tol-gauge"></div></div>
+        <div class="panel step"><div class="step-h"><span class="step-n">2</span><h2>Solution and coating</h2><span class="hint">Solvent evaporation → supersaturation → nucleation → growth gives thickness, grain size and coverage</span></div>
+          <div class="ctls">
+            <div class="row between"><span class="hint">Coating method</span><div class="seg" id="fab-dep"><button data-v="spin" aria-pressed="true">Spin</button><button data-v="blade">Blade</button><button data-v="slot">Slot-die</button><button data-v="inkjet">Inkjet</button></div></div>
+            <div class="row between"><span class="hint">Quench (fast crystallisation)</span><div class="seg" id="fab-quench"><button data-v="none">None</button><button data-v="antisolvent" aria-pressed="true">Antisolvent</button><button data-v="gas">Nitrogen gas</button><button data-v="vacuum">Vacuum</button></div></div>
+            <div class="ctls two" id="fab-sol"></div>
+          </div>
+        </div>
+        <div class="panel step"><div class="step-h"><span class="step-n">3</span><h2>Annealing</h2><span class="hint">Turning precursor into crystals and growing them</span></div><div class="ctls two" id="fab-anneal"></div></div>
+        <div class="panel step"><div class="step-h"><span class="step-n">4</span><h2>Fabrication atmosphere</h2><span class="hint">Glovebox gas, oxygen and humidity while the film is made</span></div>
+          <div class="ctls">
+            <div class="row between"><span class="hint">Gas</span><div class="seg" id="fab-atm"><button data-v="n2" aria-pressed="true">Nitrogen</button><button data-v="ar">Argon</button><button data-v="dry_air">Dry air</button><button data-v="air">Ambient air</button></div></div>
+            <div class="ctls two" id="fab-atm-ctl"></div>
+          </div>
+        </div>
+        <div class="panel step"><div class="step-h"><span class="step-n">5</span><h2>Layer stack and surface treatment</h2><span class="hint">Which transport layers and electrode to wrap it in</span></div><div class="ctls two" id="fab-stack"></div></div>
+      </div>
+      <div class="stack fab-result">
+        <div class="panel">
+          <div class="row between" style="align-items:flex-end">
+            <div><div class="hint">Efficiency of the finished cell (AM1.5G)</div><div class="big" id="fab-pce">—<small>%</small></div><div class="delta" id="fab-delta"></div></div>
+            <div class="kpis" id="fab-kpis" style="flex:1 1 300px"></div>
+          </div>
+          <div id="fab-real" class="real"></div>
+        </div>
+        <div class="panel"><div class="row between"><h2>Film properties</h2><span id="fab-vb"></span></div><div class="kpis" id="fab-film" style="margin-top:10px"></div></div>
+        <div class="panel">
+          <div class="row between"><h2>Crystallisation</h2><span class="hint">As the wet film dries, supersaturation S rises; nuclei form when S is high</span></div>
+          <svg class="chart" id="fab-crys" viewBox="0 0 640 200" role="img" aria-label="Supersaturation over time"></svg>
+          <div class="kpis" id="fab-proc" style="margin-top:10px"></div>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>Where the voltage was lost</h2><span class="hint">From the ideal limit to the actual Voc</span></div>
+          <div class="wf" id="fab-wf"></div>
+        </div>
+        <div class="panel"><h2>Fabrication notes</h2><ul class="msgs" id="fab-msgs"></ul></div>
+        <div class="panel">
+          <h2>Experiment with this cell</h2>
+          <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="send-env">See lifetime in the Environment lab</button>
+            <button class="btn" id="send-seg">To Segregation bench</button>
+            <button class="btn" id="send-ion">View ions · hysteresis</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Environment lab ================= -->
+  <section class="bench" id="bench-env" role="tabpanel" aria-labelledby="tab-env" hidden>
+    <div class="kpis" id="env-kpis"></div>
+    <div class="grid" style="margin-top:16px">
+      <div class="stack">
+        <div class="panel">
+          <div class="row between"><h2>How much efficiency remains</h2><span class="hint">Log time axis (1 hour → 10 years)</span></div>
+          <svg class="chart" id="env-chart" viewBox="0 0 640 260" role="img" aria-label="Efficiency retention over time"></svg>
+          <div class="legend" id="env-legend"></div>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>What damaged the cell</h2><span class="hint">Share of total damage by pathway (at end of period)</span></div>
+          <div class="sharebar" id="env-share"></div>
+          <div class="legend" id="env-share-legend" style="margin-top:10px"></div>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>Moisture and oxygen inside the encapsulation</h2><span class="hint">% of outside level, edge-ingress model</span></div>
+          <svg class="chart" id="env-ingress" viewBox="0 0 640 170" role="img" aria-label="Gas fraction inside encapsulation"></svg>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>Physics readout</h2><span id="env-vb"></span></div>
+          <div class="kpis" id="env-phys" style="margin-top:10px"></div>
+          <ul class="msgs" id="env-x"></ul>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="panel"><fieldset><legend>Test condition presets</legend><div class="row" id="env-presets"></div><p class="hint" id="env-preset-note" style="margin:10px 0 0"></p></fieldset></div>
+        <div class="panel">
+          <fieldset><legend>Cell under test</legend><div class="row between"><span id="env-cell-name" class="hint"></span><button class="btn" id="env-use-mapi">Compare: classic MAPbI3</button></div></fieldset>
+          <div class="row between" style="margin-top:10px"><span class="hint">Degradation rate basis</span><div class="seg" id="env-cal"><button data-v="database" aria-pressed="true">Real data (1,550 cells)</button><button data-v="papers">Individual paper experiments</button></div></div>
+          <div class="ctls" id="env-q-host" style="margin-top:8px"></div>
+          <p class="hint" id="env-cal-note" style="margin:6px 0 0"></p>
+          <hr class="div" style="margin:14px 0">
+          <fieldset><legend>Atmosphere gas</legend>
+            <div class="seg" id="env-gas" style="flex-wrap:wrap"><button data-v="air" aria-pressed="true">Air</button><button data-v="N2">Nitrogen</button><button data-v="Ar">Argon</button><button data-v="vacuum">Vacuum</button></div>
+            <div class="ctls" id="env-atm-ctl" style="margin-top:10px"></div>
+            <p class="hint" id="env-atm-note" style="margin:8px 0 0"></p>
+          </fieldset>
+          <hr class="div" style="margin:14px 0">
+          <fieldset><legend>Space orbit (temperature, light, radiation and thermal cycling computed from orbit physics)</legend>
+            <div class="seg" id="env-orbit" style="flex-wrap:wrap"><button data-v="none" aria-pressed="true">Ground</button><button data-v="leo">Low Earth orbit (LEO)</button><button data-v="geo">Geostationary (GEO)</button><button data-v="deep">Interplanetary</button></div>
+            <div class="ctls" id="env-space-ctl" style="margin-top:10px"></div>
+          </fieldset>
+          <hr class="div" style="margin:14px 0">
+          <fieldset><legend>Encapsulation</legend>
+            <div class="seg" id="env-enc" style="flex-wrap:wrap"><button data-v="none" aria-pressed="true">None</button><button data-v="polymer">Polymer only</button><button data-v="glass_glass_pib">Glass-glass+PIB</button><button data-v="thin_film_ald">Thin film (ALD)</button></div>
+          </fieldset>
+          <hr class="div" style="margin:14px 0">
+          <fieldset><legend>Conditions</legend><div class="ctls" id="env-ctl"></div></fieldset>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Ions · hysteresis ================= -->
+  <section class="bench" id="bench-ion" role="tabpanel" aria-labelledby="tab-ion" hidden>
+    <div class="kpis" id="ion-kpis"></div>
+    <div class="grid" style="margin-top:16px">
+      <div class="stack">
+        <div class="panel">
+          <div class="row between"><h2>J-V curves: reverse vs forward</h2><span class="hint" id="ion-jv-note"></span></div>
+          <svg class="chart" id="ion-jv" viewBox="0 0 640 260" role="img" aria-label="Hysteresis J-V curves"></svg>
+          <div class="legend"><span style="--c:var(--accent)">Reverse (high voltage→0 V)</span><span style="--c:var(--top)">Forward (0 V→high voltage)</span></div>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>Scan rate and hysteresis</h2><span class="hint">HI = (reverse PCE − forward PCE) / reverse PCE</span></div>
+          <svg class="chart" id="ion-hi" viewBox="0 0 640 240" role="img" aria-label="Hysteresis index vs scan rate"></svg>
+          <div class="legend" id="ion-legend"></div>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>Ion distribution in the film (right after reverse scan, 0 V)</h2><span class="hint">Halide vacancy density ÷ mean. Ions piled at the edges screen the electric field</span></div>
+          <svg class="chart" id="ion-prof" viewBox="0 0 640 200" role="img" aria-label="Vacancy distribution"></svg>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <fieldset><legend>Cell to compute</legend>
+            <div class="row between"><span class="hint">Starting point</span><div class="seg" id="ion-src"><button data-v="base" aria-pressed="true">Default cell (IonMonger)</button><button data-v="fab">Cell from the Cell lab</button></div></div>
+            <p class="hint" id="ion-src-note" style="margin:8px 0 0"></p>
+          </fieldset>
+          <hr class="div" style="margin:14px 0">
+          <fieldset><legend>Conditions (solved as is, even out of range)</legend><div class="ctls" id="ion-ctl"></div></fieldset>
+          <div class="row" style="margin-top:14px">
+            <button class="btn primary" id="ion-run">Run at this rate</button>
+            <button class="btn" id="ion-sweep">7-point rate sweep</button>
+            <button class="btn" id="ion-stop" hidden>Stop</button>
+          </div>
+          <div class="prog" style="margin-top:10px"><div id="ion-bar"></div></div>
+          <p class="hint" id="ion-status" style="margin:6px 0 0">The first view shows the default cell precomputed in Python.</p>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>Extrapolation notes</h2><span id="ion-vb"></span></div>
+          <ul class="msgs" id="ion-x"></ul>
+        </div>
+        <div class="panel">
+          <h2>How it is computed</h2>
+          <p class="hint" style="margin:6px 0 0; max-width:60ch">The three-layer drift-diffusion equations of IonMonger (Courtier et al., J. Comput. Electron. 2019) — electrons, holes, halide vacancies and potential — re-solved in Python and ported to JavaScript, running in a browser background thread (Web Worker). Same inputs give the same values as Python to three decimals. Temperature enters ion diffusion (Arrhenius), thermal voltage and intrinsic carrier density. One run takes 5–30 s.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Segregation bench ================= -->
+  <section class="bench" id="bench-seg" role="tabpanel" aria-labelledby="tab-seg" hidden>
+    <div class="kpis" id="seg-kpis"></div>
+    <div class="grid" style="margin-top:16px">
+      <div class="stack">
+        <div class="panel sample">
+          <div class="row between">
+            <h2>Sample cross-section map <span class="hint">256 × 256 nm, Br fraction</span></h2>
+            <div class="row">
+              <span class="pill" id="lamp-pill"><span class="dot"></span><span id="lamp-text">Light on</span></span>
+              <span class="pill num" id="clock">t = 0 s</span>
+            </div>
+          </div>
+          <div class="mapbox"><canvas id="map" width="256" height="256" aria-label="Br fraction map"></canvas></div>
+          <div class="scale"><span>I-rich (dark brown)</span><div class="bar"></div><span>Br-rich (orange)</span></div>
+          <div class="mapmeta"><span>Colours approximate real samples: iodide dark red-brown, bromide orange</span><label class="row" style="gap:6px"><input type="checkbox" id="show-gb" checked> Show grain boundaries</label></div>
+          <div class="row">
+            <button class="btn lamp" id="btn-lamp" aria-pressed="true">☀ Light off</button>
+            <button class="btn" id="btn-pause">Pause</button>
+            <button class="btn" id="btn-reset">New sample</button>
+            <div class="seg" role="group" aria-label="Playback speed">
+              <button data-speed="0.25">Slow</button><button data-speed="1" aria-pressed="true">Normal</button><button data-speed="4">Fast</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>PL peak over time</h2><span class="hint">PL (photoluminescence): the colour of light emitted under illumination. A drop means I-rich islands formed</span></div>
+          <svg class="chart" id="pl-chart" viewBox="0 0 640 230" role="img" aria-label="PL peak over time"></svg>
+          <div class="legend"><span style="--c:var(--accent)">PL peak (eV)</span><span style="--c:var(--lamp)">Light-on intervals</span></div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="panel">
+          <fieldset>
+            <legend>Suppression strategies from papers</legend>
+            <div class="row" id="presets"></div>
+            <p class="hint" id="preset-note" style="margin:10px 0 0"></p>
+          </fieldset>
+        </div>
+        <div class="panel">
+          <fieldset>
+            <legend>Sample (changing it makes a new one)</legend>
+            <div class="ctls" id="ctl-sample"></div>
+          </fieldset>
+          <hr class="div" style="margin:16px 0">
+          <fieldset>
+            <legend>Environment</legend>
+            <div class="ctls" id="ctl-env"></div>
+          </fieldset>
+          <hr class="div" style="margin:16px 0">
+          <fieldset>
+            <legend>Material treatments (applied live)</legend>
+            <div class="ctls" id="ctl-mat"></div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Tandem designer ================= -->
+  <section class="bench" id="bench-cell" role="tabpanel" aria-labelledby="tab-cell" hidden>
+    <div class="grid">
+      <div class="stack">
+        <div class="panel">
+          <div class="row between" style="align-items:flex-end">
+            <div>
+              <div class="hint">Power conversion efficiency (PCE)</div>
+              <div class="big" id="pce">—<small>%</small></div>
+              <div class="hint" id="pce-sub" style="margin-top:6px"></div>
+            </div>
+            <div class="kpis" id="cell-kpis" style="flex:1 1 320px"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="row between"><h2>Absorption spectrum by layer</h2><span class="hint">Light is absorbed layer by layer from the top. Grey is the solar spectrum</span></div>
+          <svg class="chart" id="abs-chart" viewBox="0 0 640 240" role="img" aria-label="Absorption by layer"></svg>
+        </div>
+        <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+          <div class="panel">
+            <h2>Current matching</h2>
+            <p class="hint" style="margin:4px 0 12px">Stacked in series, the whole stack follows the lowest-current cell</p>
+            <div class="jbars" id="jbars"></div>
+          </div>
+          <div class="panel">
+            <h2>J-V curve</h2>
+            <svg class="chart" id="jv-chart" viewBox="0 0 320 210" role="img" aria-label="J-V curve"></svg>
+          </div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <div class="ctls">
+            <div class="row between"><span class="hint">Structure</span>
+              <div class="seg" id="junction-seg"><button data-n="1">Single</button><button data-n="2" aria-pressed="true">2-junction</button><button data-n="3">3-junction</button></div>
+            </div>
+            <div class="row between"><span class="hint">Light</span>
+              <div class="seg" id="spec-seg"><button data-s="AM1.5G" aria-pressed="true">Ground AM1.5G</button><button data-s="AM0">Space AM0</button></div>
+            </div>
+            <div class="ctls" id="cell-cond"></div>
+            <div class="row"><button class="btn primary" id="btn-match">Auto-fit thicknesses (current matching)</button><span class="hint" id="match-note"></span></div>
+          </div>
+        </div>
+        <div class="layers" id="layers"></div>
+        <p class="note">ERE (external radiative efficiency): the share of electron–hole recombination that leaves as light. Closer to 1 means less loss; record cells are about 0.01, ordinary cells 0.001. Wide-bandgap top cells are lower in practice.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Composition calculator ================= -->
+  <section class="bench" id="bench-comp" role="tabpanel" aria-labelledby="tab-comp" hidden>
+    <div class="grid">
+      <div class="panel">
+        <h2>Composition → bandgap</h2>
+        <p class="lead">The bandgap (the minimum energy that can turn light into electricity) is tuned by the halide (I/Br) and metal (Pb/Sn) ratios. The dots are the current compositions.</p>
+        <svg class="chart" id="eg-chart" viewBox="0 0 640 300" role="img" aria-label="Bandgap by composition"></svg>
+        <div class="legend"><span style="--c:var(--top)">FA0.8Cs0.2Pb(I1-xBrx)3 · Br fraction x</span><span style="--c:var(--muted)">MAPb(I1-xBrx)3 (Noh 2013)</span><span style="--c:var(--bot)">Pb1-ySnyI3 · Sn fraction y</span></div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <fieldset><legend>Find a composition for a target bandgap</legend>
+            <div class="ctls" id="ctl-target"></div>
+            <div class="kpis" id="target-kpis" style="margin-top:14px"></div>
+          </fieldset>
+        </div>
+        <div class="panel">
+          <fieldset><legend>Bandgap from composition</legend><div class="ctls" id="ctl-comp"></div></fieldset>
+          <div class="kpis" id="comp-kpis" style="margin-top:14px"></div>
+          <p class="note" style="margin-top:12px">Mixing Pb and Sn gives a bandgap lower than either end ('anomalous bowing'), lowest at about 50–60% Sn.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Validation ================= -->
+  <section class="bench" id="bench-log" role="tabpanel" aria-labelledby="tab-log" hidden>
+    <div class="grid">
+      <div class="panel">
+        <div class="row between"><h2>Backtest: papers and records</h2><span class="badge ok" id="bt-score"></span></div>
+        <p class="lead">Like a trading backtest: checks whether the model reproduces known theory and experimental records (Python <span class="mono">validation/backtest.py</span>).</p>
+        <div class="tbl" style="margin-top:12px"><table id="bt-table"></table></div>
+        <div class="row between" style="margin-top:22px"><h2>Extended backtest: fabrication · environment · ions</h2><span class="badge ok" id="bt2-score"></span></div>
+        <p class="lead">'Calibrated' items set constants to match that number; 'predicted' items test whether a model built on other evidence gets it right. Failed items are kept.</p>
+        <div class="tbl" style="margin-top:12px"><table id="bt2-table"></table></div>
+        <div class="row between" style="margin-top:22px"><h2>Extrapolation physics checks: do laws still hold out of range?</h2><span class="badge ok" id="bt3-score"></span></div>
+        <p class="lead">Browser model (<span class="mono">web/validate.js</span>) — checks against textbook property values, independent measurements, and trends that must hold physically (monotonicity, limits).</p>
+        <div class="tbl" style="margin-top:12px"><table id="bt3-table"></table></div>
+        <div class="row between" style="margin-top:22px"><h2>Real-data check: about 48,000 real cells</h2><span class="badge ok" id="bt4-score"></span></div>
+        <p class="lead">Compared with the latest Perovskite Database Project release from NOMAD (Jacobsson et al., Nature Energy 2022, CC BY 4.0; papers 2009–2026, about 48,000 of 51,659 cells within the lab's model range). 'Calibrated' items changed constants using this data, 'check' and 'predicted' items only test agreement, 'limit' marks what the model cannot do yet.</p>
+        <div class="tbl" style="margin-top:12px"><table id="bt4-table"></table></div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <h2>Suppression strategies compared (Python experiment 05)</h2>
+          <p class="hint" style="margin:4px 0 10px">1 sun, 10 min, 1.77 eV top cell in a 2-junction tandem</p>
+          <div class="tbl"><table id="st-table"></table></div>
+          <p class="note" style="margin-top:12px">Vacancy and grain-boundary treatments mainly slow the <b>speed</b> of segregation, while the final loss is set by Ω (lattice strain), carrier density and Br fraction.</p>
+        </div>
+        <div class="panel">
+          <h2>Remaining limitations</h2>
+          <ul class="hint" style="margin:8px 0 0; padding-left:18px; display:grid; gap:6px">
+            <li>With the 'real data' basis, condition-group averages match within 1.5×, but individual cell lifetimes fall within 3× only about half the time because quality varies by lab.</li>
+            <li>More optimistic than the in-orbit measurement (SSPD-1). Cover-glass yellowing and pre-launch humidity exposure are not modelled.</li>
+            <li>Nitrogen and argon come out almost the same. Both are inert; in practice the remaining oxygen and moisture ppm matter far more than the gas.</li>
+            <li>The crystallisation constants (nucleation and growth) were fitted to typical results of four processes: antisolvent, gas, vacuum and no quench. Effects of spin speed, concentration, temperature and solvent come from property data and equations, but treat absolute values as ±50%.</li>
+            <li>The ion/hysteresis model is one-dimensional (through the film). Fast ion paths along grain boundaries are not included.</li>
+            <li>Activation energies of the degradation rates come mostly from 25–85 °C data. Outside that (−100 °C in space, 150 °C under concentration) the same laws are extended, so new reactions at those temperatures would be missed.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>/*SPECTRA*/</script>
+<script>/*CORE*/</script>
+<script>/*LAB*/</script>
+<script>/*APP*/</script>

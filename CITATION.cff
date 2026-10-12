@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use perolab, please cite it as below."
+title: "perolab: a virtual lab for perovskite solar cells"
+type: software
+authors:
+  - given-names: "Kavin"
+    alias: "jiseong6i6-blip"
+version: "1.0.0"
+date-released: "2026-10-12"
+license: MIT
+repository-code: "https://github.com/jiseong6i6-blip/perolab"
+url: "https://jiseong6i6-blip.github.io/perolab/"
+keywords:
+  - perovskite
+  - solar cell
+  - photovoltaics
+  - simulation
+  - drift-diffusion
+  - phase field
+references:
+  - type: article
+    title: "An open-access database and analysis tool for perovskite solar cells based on the FAIR data principles"
+    authors:
+      - family-names: "Jacobsson"
+        given-names: "T. Jesper"
+    journal: "Nature Energy"
+    volume: 7
+    start: 107
+    end: 115
+    year: 2022
+    doi: "10.1038/s41560-021-00941-3"

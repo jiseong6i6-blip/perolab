@@ -1,0 +1,268 @@
+[
+ {
+  "area": "Gas",
+  "name": "Water vapour-air diffusivity 25 °C",
+  "value": "0.214 cm²/s",
+  "ok": true,
+  "ref": "measured 0.25 cm²/s (CRC Handbook) · allowed 0.20-0.30"
+ },
+ {
+  "area": "Gas",
+  "name": "Iodine-air diffusivity 25 °C",
+  "value": "0.0804 cm²/s",
+  "ok": true,
+  "ref": "measured about 0.07-0.08 cm²/s · allowed 0.06-0.10"
+ },
+ {
+  "area": "Gas",
+  "name": "Diffusivity temperature exponent (300->400 K)",
+  "value": "1.86",
+  "ok": true,
+  "ref": "Fuller and measurements D ∝ T^1.75 · allowed 1.6-1.9"
+ },
+ {
+  "area": "Gas",
+  "name": "Diffusivity inversely proportional to pressure (0.1 bar/1 bar)",
+  "value": "10",
+  "ok": true,
+  "ref": "kinetic theory D ∝ 1/P · allowed 9.9-10.1"
+ },
+ {
+  "area": "Gas",
+  "name": "Mean free path of air at 1 atm 25 °C",
+  "value": "66.4 nm",
+  "ok": true,
+  "ref": "textbook about 66 nm · allowed 55-75"
+ },
+ {
+  "area": "Gas",
+  "name": "Volatile suppression in N2 1 atm 55 °C (calibrated)",
+  "value": "0.00992",
+  "ok": true,
+  "ref": "Ruess 2020: about 1/100 of vacuum (the single sticking coefficient s is fitted here)"
+ },
+ {
+  "area": "Gas",
+  "name": "Heavier gas suppresses volatiles more (He > N₂ > Ar escape)",
+  "value": "He 4.33× · Ar 0.861×",
+  "ok": true,
+  "ref": "molecular mass and size -> diffusivity order (must hold)"
+ },
+ {
+  "area": "Gas",
+  "name": "Pressure down -> converges continuously to vacuum (10⁻³ Pa)",
+  "value": "1",
+  "ok": true,
+  "ref": "must equal vacuum in the Knudsen regime + decrease monotonically with pressure"
+ },
+ {
+  "area": "Water",
+  "name": "Saturation vapour pressure of water 25 °C",
+  "value": "3170 Pa",
+  "ok": true,
+  "ref": "steam tables 3169 Pa · allowed ±1%"
+ },
+ {
+  "area": "Water",
+  "name": "Saturation vapour pressure of water 100 °C",
+  "value": "101 kPa",
+  "ok": true,
+  "ref": "boiling point 101.3 kPa · allowed ±1%"
+ },
+ {
+  "area": "Water",
+  "name": "Saturation vapour pressure over ice −20 °C",
+  "value": "103 Pa",
+  "ok": true,
+  "ref": "steam tables 103.3 Pa · allowed ±3%"
+ },
+ {
+  "area": "Water",
+  "name": "1000 ppm water -> relative humidity at 25 °C",
+  "value": "3.2%",
+  "ok": true,
+  "ref": "by definition 1000e-6 × 101325 / 3169 = 3.2%"
+ },
+ {
+  "area": "Solvent",
+  "name": "DMF vapour pressure 25 °C",
+  "value": "487 Pa",
+  "ok": true,
+  "ref": "literature about 490 Pa (3.7 mmHg) · interpolated between the 20 °C value and the boiling point"
+ },
+ {
+  "area": "Solvent",
+  "name": "Acetonitrile vapour pressure 25 °C",
+  "value": "12.2 kPa",
+  "ok": true,
+  "ref": "literature 11.9 kPa (88.8 mmHg)"
+ },
+ {
+  "area": "Solvent",
+  "name": "DMF effective heat of vaporization",
+  "value": "44.1 kJ/mol",
+  "ok": true,
+  "ref": "literature 46.9 kJ/mol (25 °C), 44 (near the boiling point)"
+ },
+ {
+  "area": "Process",
+  "name": "Spin thickness ∝ speed^(−n)",
+  "value": "0.5",
+  "ok": true,
+  "ref": "experiments n ≈ 0.5 (reported range for perovskite spin coating 0.4-0.7)"
+ },
+ {
+  "area": "Process",
+  "name": "2x concentration -> thickness ratio",
+  "value": "2.28",
+  "ok": true,
+  "ref": "2x from mass conservation + a bit more from higher viscosity"
+ },
+ {
+  "area": "Process",
+  "name": "Hot substrate -> wet film dries fast and gets thicker",
+  "value": "1.94",
+  "ok": true,
+  "ref": "Meyerhofer: h ∝ (η·E)^(1/3), evaporation E rises with vapour pressure (why hot-cast films are thick)"
+ },
+ {
+  "area": "Process",
+  "name": "Faster quench -> more nuclei, smaller grains",
+  "value": "vacuum 496 < none 1670 nm",
+  "ok": true,
+  "ref": "LaMer: the faster supersaturation rises, the bigger the nucleation burst (a trend that must hold)"
+ },
+ {
+  "area": "Process",
+  "name": "Faster gas knife -> smaller grains, higher coverage",
+  "value": "400 m/s 486 vs 20 m/s 1220 nm",
+  "ok": true,
+  "ref": "mass transfer k ∝ √speed -> same direction"
+ },
+ {
+  "area": "Process",
+  "name": "Ostwald ripening d³ − d₀³ ∝ t",
+  "value": "8",
+  "ok": true,
+  "ref": "LSW theory (8x time -> 8x increase in d³)"
+ },
+ {
+  "area": "Process",
+  "name": "Grain growth at 100 °C 30 min (calibrated)",
+  "value": "1.3×",
+  "ok": true,
+  "ref": "reported annealing trend +30% (K₀ and Ea fitted to two points, 100 and 150 °C)"
+ },
+ {
+  "area": "Space thermal",
+  "name": "Sun-pointing panel temperature at Earth distance",
+  "value": "42.1 °C",
+  "ok": true,
+  "ref": "reported operating temperature of space solar arrays about 40-70 °C · allowed 20-80"
+ },
+ {
+  "area": "Space thermal",
+  "name": "Temperature ratio at Mars distance T(1.52 AU)/T(1 AU)",
+  "value": "0.81",
+  "ok": true,
+  "ref": "radiative equilibrium T ∝ r^(−1/2) = 0.810 (must hold)"
+ },
+ {
+  "area": "Space thermal",
+  "name": "LEO eclipse temperature swing (thin panel vs heavy body)",
+  "value": "157 vs 48.1 K",
+  "ok": true,
+  "ref": "light panels swing ±80 °C or more (ISS arrays reported −100 to +100 °C), SSPD-1 mounted on the satellite body −25 to 35 °C (60 K)"
+ },
+ {
+  "area": "Device",
+  "name": "Voc slope (per 10x light)",
+  "value": "59.6 mV",
+  "ok": true,
+  "ref": "ideality factor 1: kT/q·ln10 = 59.2 mV/decade (must hold)"
+ },
+ {
+  "area": "Device",
+  "name": "Single-cell efficiency temperature coefficient",
+  "value": "-0.191 %/K",
+  "ok": true,
+  "ref": "perovskite measurements −0.1 to −0.3 %/K (partly offset by the widening band gap)"
+ },
+ {
+  "area": "Device",
+  "name": "Voc temperature coefficient",
+  "value": "-1.29 mV/K",
+  "ok": true,
+  "ref": "perovskite measurements around −1 mV/K (smaller than silicon's −2 mV/K)"
+ },
+ {
+  "area": "Device",
+  "name": "Default recipe efficiency (must equal the Python fabrication model)",
+  "value": "23 %",
+  "ok": true,
+  "ref": "Python fabrication.py 22.99% (equal because process physics is normalized at the reference point)"
+ },
+ {
+  "area": "Env",
+  "name": "Temperature up -> lifetime decreases monotonically (25 vs 120 °C)",
+  "value": "98.5 → 43.7 h",
+  "ok": true,
+  "ref": "every pathway is Arrhenius (must hold)"
+ },
+ {
+  "area": "Env",
+  "name": "Gas pressure up -> volatile lifetime increases monotonically",
+  "value": "monotonic",
+  "ok": true,
+  "ref": "escape probability decreases monotonically with pressure (must hold)"
+ },
+ {
+  "area": "Env",
+  "name": "Old atmosphere name still works (nitrogen glovebox)",
+  "value": "0.00992",
+  "ok": true,
+  "ref": "must give the same value as the old table value 0.01"
+ },
+ {
+  "area": "Segregation",
+  "name": "Spinodal decomposition in the dark only when Ω > 2kT",
+  "value": "Ω 80 meV σ=0.109 · 30 meV σ=0.000345",
+  "ok": true,
+  "ref": "regular-solution theory: critical Ω_c = 2kT = 52 meV @300 K (must hold)"
+ },
+ {
+  "area": "Segregation",
+  "name": "Even at Ω 80 meV, mixed when T > Ω/2k (464 K)",
+  "value": "600 K σ=0.00035",
+  "ok": true,
+  "ref": "above the critical temperature entropy wins (must hold)"
+ },
+ {
+  "area": "Ion",
+  "name": "Browser solver = Python solver (HI @100 mV/s)",
+  "value": "JS 0.3337 · Py 0.3337",
+  "ok": true,
+  "ref": "same equations, grid and time stepping ported -> must agree to the third decimal"
+ },
+ {
+  "area": "Ion",
+  "name": "100 mV/s hysteresis vanishes at −40 °C and 120 °C",
+  "value": "−40 °C 0.001 · 25 °C 0.334 · 120 °C 0.002",
+  "ok": true,
+  "ref": "ions freeze (τ ≫ scan) or move too fast (τ ≪ scan), so hysteresis disappears - same direction as low-temperature measurements"
+ },
+ {
+  "area": "Ion",
+  "name": "Ion time-constant ratio τ(0 °C)/τ(25 °C)",
+  "value": "7.57",
+  "ok": true,
+  "ref": "Arrhenius × √T (Debye length) analytic value 7.57"
+ },
+ {
+  "area": "Ion",
+  "name": "2x thickness -> 2x τ",
+  "value": "2",
+  "ok": true,
+  "ref": "τ = b·L_D/D (must hold)"
+ }
+]
